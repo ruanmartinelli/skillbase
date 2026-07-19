@@ -3,3 +3,5 @@ node_modules/
 .dev.vars
 scripts/data.mjs
 scripts/data.sql
+scripts/content.mjs
+scripts/content.sql

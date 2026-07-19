@@ -9,6 +9,7 @@ export interface SkillsTable {
   skillId: string | null
   installs: number
   weeklyInstalls: string | null
+  content: string | null
 }
 
 export interface Database {

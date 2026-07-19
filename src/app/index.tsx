@@ -1,6 +1,6 @@
-import type { SkillsTable } from '../lib/db'
+import type { Skill } from '../lib/skills'
 
-export const IndexPage = ({ skills }: { skills: SkillsTable[] }) => (
+export const IndexPage = ({ skills }: { skills: Skill[] }) => (
   <html>
     <body>
       <h1>Skills</h1>

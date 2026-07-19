@@ -14,5 +14,10 @@
     "@cloudflare/workers-types": "^5.20260714.1",
     "typescript": "^5.8.0",
     "wrangler": "^4.24.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "all"
   }
 }
