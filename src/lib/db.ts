@@ -5,6 +5,10 @@ import { D1Dialect } from 'kysely-d1'
 export interface SkillsTable {
   id: number
   name: string
+  source: string | null
+  skillId: string | null
+  installs: number
+  weeklyInstalls: string | null
 }
 
 export interface Database {
