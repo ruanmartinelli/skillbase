@@ -9,8 +9,19 @@ export const skills = {
     let query = db
       .selectFrom('skills')
       .select(['id', 'name', 'source', 'skillId', 'installs'])
+      .orderBy('installs', 'desc')
+      .limit(200)
     if (filter.name) query = query.where('name', 'like', `%${filter.name}%`)
     return query.execute()
+  },
+
+  async count() {
+    const row = await db
+      .selectFrom('skills')
+      .select((eb) => eb.fn.countAll().as('n'))
+      .executeTakeFirst()
+
+    return Number(row?.n ?? 0)
   },
 }
 

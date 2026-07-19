@@ -1,0 +1,35 @@
+body {
+  max-width: 52rem;
+}
+
+header p {
+  margin-top: -0.75rem;
+}
+
+form {
+  margin-bottom: 1.5rem;
+}
+
+input[type='search'] {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+td,
+th {
+  vertical-align: baseline;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.muted {
+  opacity: 0.6;
+  overflow-wrap: anywhere;
+}

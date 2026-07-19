@@ -1,18 +1,15 @@
 import type { Skill } from '../lib/skills'
+import { Layout, SearchForm, SkillTable } from './components'
 
-export const IndexPage = ({ skills }: { skills: Skill[] }) => (
-  <html>
-    <body>
-      <h1>Skills</h1>
-      {skills.length === 0 ? (
-        <p>No skills yet.</p>
-      ) : (
-        <ul>
-          {skills.map((skill) => (
-            <li>{skill.name}</li>
-          ))}
-        </ul>
-      )}
-    </body>
-  </html>
+export const IndexPage = ({ skills, total, q }: { skills: Skill[]; total: number; q?: string }) => (
+  <Layout>
+    <header>
+      <h1>skillbase</h1>
+      <p class="muted">
+        {total.toLocaleString('en-US')} open agent skills
+      </p>
+    </header>
+    <SearchForm q={q} />
+    {skills.length === 0 ? <p>No skills found.</p> : <SkillTable skills={skills} />}
+  </Layout>
 )

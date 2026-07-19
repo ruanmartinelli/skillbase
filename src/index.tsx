@@ -5,8 +5,14 @@ import { skills } from './lib/skills'
 const app = new Hono()
 
 app.get('/', async (c) => {
-  const rows = await skills.list()
-  return c.html(<IndexPage skills={rows} />)
+  const q = c.req.query('q')
+
+  const [rows, total] = await Promise.all([
+    skills.list({ name: q }),
+    skills.count(),
+  ])
+
+  return c.html(<IndexPage skills={rows} total={total} q={q} />)
 })
 
 export default app

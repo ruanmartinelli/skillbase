@@ -2,6 +2,7 @@
   "name": "skillbase",
   "main": "src/index.tsx",
   "compatibility_date": "2026-07-19",
+  "assets": { "directory": "./public" },
   "d1_databases": [
     {
       "binding": "DB",
