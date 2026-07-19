@@ -1,0 +1,12 @@
+{
+  "name": "skillbase",
+  "main": "src/index.tsx",
+  "compatibility_date": "2026-07-19",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "skillbase",
+      "database_id": "c80686b3-6e4f-43cb-b8db-43e7fa35438f"
+    }
+  ]
+}
