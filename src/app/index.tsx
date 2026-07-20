@@ -6,7 +6,7 @@ export const IndexPage = ({ skills, total, q }: { skills: Skill[]; total: number
     <header>
       <h1>skillbase</h1>
       <p class="muted">
-        {total.toLocaleString('en-US')} open agent skills
+        {total.toLocaleString('en-US')} open agent skills · <a href="/ask">ask a question</a>
       </p>
     </header>
     <SearchForm q={q} />

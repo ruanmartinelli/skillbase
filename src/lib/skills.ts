@@ -1,5 +1,6 @@
 import { chunk, keyBy, orderBy, take } from 'es-toolkit'
 import { db } from './db'
+import { generate } from './llm'
 import { cosine, embed, fromBytes, toBytes } from './vectors'
 
 let cached: { id: number; vec: Float32Array }[] | null = null
@@ -117,6 +118,45 @@ export const skills = {
           )
 
     return { baseScore, contributions }
+  },
+
+  async ask(q: string) {
+    const top = (await this.search(q, 3)).filter((s) => s.score >= 0.6)
+
+    if (top.length === 0) return null
+
+    const docs = await db
+      .selectFrom('skills')
+      .select(['id', 'content'])
+      .where(
+        'id',
+        'in',
+        top.map((s) => s.id),
+      )
+      .execute()
+    const contentById = keyBy(docs, (d) => d.id)
+
+    const context = top
+      .map(
+        (s) =>
+          `## Source: ${s.name} (by ${s.source})\n${(contentById[s.id]?.content ?? '').slice(0, 6000)}`,
+      )
+      .join('\n\n')
+
+    const answer = await generate(
+      'You answer developer questions using the source documents below, which ' +
+        'are guides written for AI coding agents. Answer the question directly ' +
+        'and practically: give the actual steps, commands, and advice found in ' +
+        'the sources, as if explaining to the developer yourself. Mention a ' +
+        'source name only when attributing where advice came from — never tell ' +
+        'the user to go install or read a skill instead of answering. ' +
+        'If the sources do not contain enough to answer, say so plainly. ' +
+        'Answer in plain text without markdown formatting.\n\n' +
+        context,
+      q,
+    )
+
+    return { answer, sources: top }
   },
 
   async embedMissing(limit = 100) {

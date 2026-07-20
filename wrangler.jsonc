@@ -4,6 +4,9 @@
   "compatibility_date": "2026-07-19",
   "assets": { "directory": "./public" },
   "ai": { "binding": "AI" },
+  "kv_namespaces": [
+    { "binding": "RATE", "id": "7867dfd44d104127bfc1933fe0f4b837" }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
