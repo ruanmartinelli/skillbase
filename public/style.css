@@ -33,3 +33,58 @@ th {
   opacity: 0.6;
   overflow-wrap: anywhere;
 }
+
+button.why {
+  background: none;
+  border: none;
+  padding: 0;
+  height: auto;
+  box-shadow: none;
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: inherit;
+  opacity: 0.5;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+button.why:hover {
+  opacity: 1;
+  background: none;
+}
+
+#explain {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(26rem, calc(100vw - 2rem));
+  border-radius: 1rem;
+  padding: 1.5rem;
+  corner-shape: superellipse(1.3rem);
+}
+
+#explain::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#explain-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.chip {
+  padding: 0.15rem 0.6rem;
+  border-radius: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip.pos {
+  background: rgba(46, 160, 67, var(--w));
+}
+
+.chip.neg {
+  background: rgba(248, 81, 73, var(--w));
+}

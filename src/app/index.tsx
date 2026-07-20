@@ -1,5 +1,5 @@
 import type { Skill } from '../lib/skills'
-import { Layout, SearchForm, SkillTable } from './components'
+import { ExplainDialog, Layout, SearchForm, SkillTable } from './components'
 
 export const IndexPage = ({ skills, total, q }: { skills: Skill[]; total: number; q?: string }) => (
   <Layout>
@@ -10,6 +10,7 @@ export const IndexPage = ({ skills, total, q }: { skills: Skill[]; total: number
       </p>
     </header>
     <SearchForm q={q} />
-    {skills.length === 0 ? <p>No skills found.</p> : <SkillTable skills={skills} />}
+    {skills.length === 0 ? <p>No skills found.</p> : <SkillTable skills={skills} q={q} />}
+    {q ? <ExplainDialog /> : null}
   </Layout>
 )

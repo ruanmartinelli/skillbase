@@ -27,13 +27,14 @@ export const SearchForm = ({ q }: { q?: string }) => (
   </form>
 )
 
-export const SkillTable = ({ skills }: { skills: Skill[] }) => (
+export const SkillTable = ({ skills, q }: { skills: Skill[]; q?: string }) => (
   <table>
     <thead>
       <tr>
         <th>Skill</th>
         <th>Source</th>
         <th class="num">Installs</th>
+        {q ? <th /> : null}
       </tr>
     </thead>
     <tbody>
@@ -44,8 +45,26 @@ export const SkillTable = ({ skills }: { skills: Skill[] }) => (
           </td>
           <td class="muted">{skill.source}</td>
           <td class="num">{skill.installs.toLocaleString('en-US')}</td>
+          {q ? (
+            <td>
+              <button type="button" class="why" data-id={skill.id}>
+                why?
+              </button>
+            </td>
+          ) : null}
         </tr>
       ))}
     </tbody>
   </table>
+)
+
+export const ExplainDialog = () => (
+  <dialog id="explain">
+    <h3 id="explain-name"></h3>
+    <div id="explain-chips"></div>
+    <p class="muted" id="explain-score"></p>
+    <form method="dialog">
+      <button>Close</button>
+    </form>
+  </dialog>
 )

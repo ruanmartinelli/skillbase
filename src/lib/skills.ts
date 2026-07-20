@@ -87,7 +87,38 @@ export const skills = {
     })
   },
 
-  // @todo: remove after running
+  async explain(q: string, skillId: number) {
+    const vectors = await loadVectors()
+
+    const target = vectors.find((v) => v.id === skillId)
+    if (!target) return null
+
+    const words = q.split(/\s+/).filter(Boolean).slice(0, 20)
+    if (words.length === 0) return null
+
+    const variants =
+      words.length > 1
+        ? words.map((_, i) => words.filter((_, j) => j !== i).join(' '))
+        : []
+
+    const [full, ...rest] = await embed([q, ...variants])
+    const baseScore = cosine(full, target.vec)
+
+    const contributions =
+      words.length === 1
+        ? [{ word: words[0], contribution: baseScore }]
+        : orderBy(
+            words.map((word, i) => ({
+              word,
+              contribution: baseScore - cosine(rest[i], target.vec),
+            })),
+            ['contribution'],
+            ['desc'],
+          )
+
+    return { baseScore, contributions }
+  },
+
   async embedMissing(limit = 100) {
     const embeddingText = (name: string, content: string | null) =>
       `${name}\n\n${(content ?? '').slice(0, 1500)}`
