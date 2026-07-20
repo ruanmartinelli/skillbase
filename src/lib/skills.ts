@@ -59,18 +59,13 @@ export const skills = {
   },
 
   async search(q: string, limit = 20) {
-    console.log('q', q)
-    const [queryVec] = await embed([q])
-    
-    console.log('queryVec', queryVec)
+    const [qVector] = await embed([q])
 
     const vectors = await loadVectors()
 
-    console.log('vectors', vectors)
-
     const scored = vectors.map(({ id, vec }) => ({
       id,
-      score: cosine(queryVec, vec),
+      score: cosine(qVector, vec),
     }))
 
     const top = take(orderBy(scored, ['score'], ['desc']), limit)
