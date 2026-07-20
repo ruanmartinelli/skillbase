@@ -38,6 +38,13 @@ document.addEventListener('click', async (e) => {
   }
 })
 
+for (const input of document.querySelectorAll('input[type=search]')) {
+  input.addEventListener('search', () => {
+    if (input.value !== '' || !location.search) return
+    location.href = input.form?.getAttribute('action') ?? location.pathname
+  })
+}
+
 document.addEventListener('keydown', (e) => {
   const input = document.querySelector('input[type=search]')
 

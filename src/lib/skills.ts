@@ -1,4 +1,4 @@
-import { chunk, keyBy, orderBy, take } from 'es-toolkit'
+import { chunk, keyBy, orderBy, take, uniqBy } from 'es-toolkit'
 import { db } from './db'
 import { generate } from './llm'
 import { cosine, embed, fromBytes, toBytes } from './vectors'
@@ -121,7 +121,12 @@ export const skills = {
   },
 
   async ask(q: string) {
-    const top = (await this.search(q, 3)).filter((s) => s.score >= 0.6)
+    const skills = await this.search(q, 15)
+    
+    const top = take(
+      uniqBy(skills, (s) => s.name).filter((s) => s.score >= 0.6),
+      5,
+    )
 
     if (top.length === 0) return null
 
@@ -139,18 +144,18 @@ export const skills = {
     const context = top
       .map(
         (s) =>
-          `## Source: ${s.name} (by ${s.source})\n${(contentById[s.id]?.content ?? '').slice(0, 6000)}`,
+          `## ${s.name} (by ${s.source})\n${(contentById[s.id]?.content ?? '').slice(0, 2500)}`,
       )
       .join('\n\n')
 
     const answer = await generate(
-      'You answer developer questions using the source documents below, which ' +
-        'are guides written for AI coding agents. Answer the question directly ' +
-        'and practically: give the actual steps, commands, and advice found in ' +
-        'the sources, as if explaining to the developer yourself. Mention a ' +
-        'source name only when attributing where advice came from — never tell ' +
-        'the user to go install or read a skill instead of answering. ' +
-        'If the sources do not contain enough to answer, say so plainly. ' +
+      'You help developers pick agent skills from the skillbase directory. ' +
+        'The candidate skills for this question are documented below. ' +
+        'Recommend the skill or skills that best fit the question, and for ' +
+        'each one explain concretely what it does and how it approaches the ' +
+        'task, drawing on its documentation — not just its name. Compare ' +
+        'briefly when several fit. If none of them actually fit, say so ' +
+        'plainly instead of stretching. ' +
         'Answer in plain text without markdown formatting.\n\n' +
         context,
       q,

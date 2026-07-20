@@ -2,6 +2,7 @@ import { env } from 'cloudflare:workers'
 import { Hono } from 'hono'
 import { IndexPage } from './app'
 import { AskPage } from './app/ask'
+import { generate } from './lib/llm'
 import { skills } from './lib/skills'
 
 const rate = (env as unknown as { RATE: KVNamespace }).RATE
@@ -46,6 +47,32 @@ app.get('/api/explain', async (c) => {
 
   const result = await skills.explain(q, id)
   return result ? c.json(result) : c.json({ error: 'skill not found' }, 404)
+})
+
+// Eval-only helpers, never available on the deployed host: JSON access to
+// ask() and to the bare LLM, so scripts/eval.mjs can compare RAG vs raw.
+const isLocal = (url: string) =>
+  ['localhost', '127.0.0.1'].includes(new URL(url).hostname)
+
+app.get('/admin/ask', async (c) => {
+  if (!isLocal(c.req.url)) return c.notFound()
+  const q = c.req.query('q')?.trim()
+  if (!q) return c.json({ error: 'q is required' }, 400)
+  return c.json(await skills.ask(q))
+})
+
+app.post('/admin/llm', async (c) => {
+  if (!isLocal(c.req.url)) return c.notFound()
+  const { system, user, model } = await c.req.json<{
+    system: string
+    user: string
+    model?: string
+  }>()
+  try {
+    return c.json({ text: await generate(system, user, model) })
+  } catch (err) {
+    return c.json({ error: String(err) }, 500)
+  }
 })
 
 app.post('/admin/embed', async (c) => {
